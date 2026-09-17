@@ -45,6 +45,16 @@ function startAct2Music(){
   bgAudio.src = 'assets/suspense_soundridemusic.mp3';
   bgAudio.play().catch(e => console.log("Audio play failed:", e));
 }
+function startAct3Music(){
+  stopMusic();
+  if (!bgAudio) {
+    bgAudio = new Audio();
+    bgAudio.loop = true;
+    bgAudio.volume = 0.5;
+  }
+  bgAudio.src = 'assets/last_cat.mp3';
+  bgAudio.play().catch(e => console.log("Audio play failed:", e));
+}
 function stopMusic(){ 
   if(musicTimer){ clearInterval(musicTimer); musicTimer = null; } 
   if (bgAudio) {

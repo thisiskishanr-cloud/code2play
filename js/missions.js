@@ -352,7 +352,7 @@ async function revealSequence(){
 /* ---------- ACT III ---------- */
 async function act3Intro(){
   await fadeOut(600);
-  stopMusic();
+  startAct3Music();
   S.act = 3;
   S.mission = 10;
   S.rain = 1; S.dark = 0.68;
