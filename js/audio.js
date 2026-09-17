@@ -2,7 +2,7 @@
 /* +500 — All sound is synthesised with the Web Audio API — there are no audio files. */
 
 /* ---------- audio (synthesised, no assets) ---------- */
-let AC = null, musicTimer = null, droneNode = null;
+let AC = null, musicTimer = null, droneNode = null, bgAudio = null;
 function audio(){ if(!AC){ try{ AC = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
 function tone(freq, dur, type, vol, when){
   const ac = audio(); if(!ac) return;
@@ -27,15 +27,20 @@ function sfxGlitch(){
 }
 function startMusic(){
   stopMusic();
-  const notes = [98, 98, 130.8, 110, 98, 98, 146.8, 130.8];
-  let i = 0;
-  musicTimer = setInterval(()=>{
-    tone(notes[i%notes.length], 0.22, 'triangle', 0.05);
-    if(i%2===0) tone(notes[i%notes.length]*4, 0.08, 'square', 0.02);
-    i++;
-  }, 250);
+  if (!bgAudio) {
+    bgAudio = new Audio('assets/videoplayback.m4a');
+    bgAudio.loop = true;
+    bgAudio.volume = 0.5;
+  }
+  bgAudio.play().catch(e => console.log("Audio play failed:", e));
 }
-function stopMusic(){ if(musicTimer){ clearInterval(musicTimer); musicTimer = null; } }
+function stopMusic(){ 
+  if(musicTimer){ clearInterval(musicTimer); musicTimer = null; } 
+  if (bgAudio) {
+    bgAudio.pause();
+    bgAudio.currentTime = 0;
+  }
+}
 function startDrone(){
   const ac = audio(); if(!ac || droneNode) return;
   const o = ac.createOscillator(), g = ac.createGain();
