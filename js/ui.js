@@ -97,6 +97,75 @@ async function actCard(num, name, hold){
   showOverlay('act', false);
 }
 
+/* ---------- CCTV UI helpers ---------- */
+let cctvClockInterval = null;
+let cctvBaseSeconds = 0;
+function startCctvClock(baseTimeStr){
+  stopCctvClock();
+  const parts = baseTimeStr.split(':').map(Number);
+  cctvBaseSeconds = (parts[0]*3600 + parts[1]*60 + parts[2]);
+  let frames = parts[3] || 0;
+  const startTime = performance.now();
+  cctvClockInterval = setInterval(()=>{
+    const elapsed = (performance.now() - startTime) / 1000;
+    const cur = cctvBaseSeconds + elapsed;
+    const h = String(Math.floor(cur / 3600) % 24).padStart(2, '0');
+    const m = String(Math.floor((cur % 3600) / 60)).padStart(2, '0');
+    const s = String(Math.floor(cur % 60)).padStart(2, '0');
+    const f = String(Math.floor((elapsed * 30) % 30)).padStart(2, '0');
+    const el = $('cctvTime');
+    if(el) el.textContent = `${h}:${m}:${s}:${f}`;
+  }, 33);
+}
+function stopCctvClock(){
+  if(cctvClockInterval){ clearInterval(cctvClockInterval); cctvClockInterval = null; }
+}
+
+function setCctvCam(camText, timeStr, gradeClass, trackTag, trackBoxStyle){
+  const overlay = $('cctvOverlay');
+  overlay.className = 'overlay on ' + (gradeClass || '');
+  $('cctvCam').textContent = camText;
+  startCctvClock(timeStr);
+  const track = $('cctvTrackbox');
+  const tag = $('cctvTrackTag');
+  if(trackTag) tag.textContent = trackTag;
+  if(trackBoxStyle){
+    Object.assign(track.style, trackBoxStyle);
+    track.style.display = 'block';
+  } else {
+    track.style.display = 'none';
+  }
+  $('cctvStamp').className = 'cctv-stamp';
+  $('cctvStamp').textContent = '';
+  $('cctvReward').className = 'cctv-reward';
+  $('cctvReward').style.display = 'none';
+  $('cctvVictim').classList.remove('show');
+}
+
+function showCctvGlitch(ms){
+  const g = $('cctvGlitch');
+  g.classList.add('active');
+  sfxGlitch();
+  setTimeout(()=>{ g.classList.remove('active'); }, ms||250);
+}
+
+function showCctvStamp(text){
+  const stamp = $('cctvStamp');
+  stamp.textContent = text;
+  stamp.className = 'cctv-stamp show';
+  sfxStamp();
+}
+
+function hideCctvOverlay(){
+  stopCctvClock();
+  showOverlay('cctvOverlay', false);
+  const overlay = $('cctvOverlay');
+  overlay.className = 'overlay';
+  $('cctvStamp').className = 'cctv-stamp';
+  $('cctvVictim').classList.remove('show');
+}
+
+
 /* ---------- particles ---------- */
 function burst(x, y, color, n, speed){
   for(let i=0;i<(n||16);i++){

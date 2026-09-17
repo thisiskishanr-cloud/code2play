@@ -24,10 +24,62 @@ const roads = [
 const park = {x:880,y:700,w:420,h:250};
 const lot  = {x:1500,y:640,w:300,h:290};
 
-/* street furniture — cheap rectangles, but they give the block density */
+/* sidewalks with stone curbs */
+const sidewalks = [
+  {x:0, y:410, w:WORLD.w, h:60, curb:'bottom'},
+  {x:0, y:620, w:WORLD.w, h:60, curb:'top'},
+  {x:740, y:0, w:60, h:WORLD.h, curb:'right'},
+  {x:930, y:0, w:60, h:WORLD.h, curb:'left'},
+  {x:1420, y:0, w:60, h:WORLD.h, curb:'right'},
+  {x:1590, y:0, w:60, h:WORLD.h, curb:'left'},
+  {x:0, y:940, w:WORLD.w, h:60, curb:'bottom'},
+  {x:0, y:1060, w:WORLD.w, h:60, curb:'top'}
+];
+
+/* street trees & park foliage */
+const trees = [
+  // street trees with decorative sidewalk grates
+  {x:430, y:442, r:25, v:0, grate:true},
+  {x:730, y:442, r:27, v:1, grate:true},
+  {x:1070, y:442, r:25, v:2, grate:true},
+  {x:1380, y:442, r:27, v:0, grate:true},
+  {x:1720, y:442, r:26, v:1, grate:true},
+  {x:430, y:648, r:25, v:1, grate:true},
+  {x:730, y:648, r:27, v:0, grate:true},
+  {x:1380, y:648, r:26, v:2, grate:true},
+  {x:350, y:972, r:24, v:0, grate:true},
+  {x:730, y:972, r:25, v:1, grate:true},
+  {x:1200, y:972, r:25, v:2, grate:true},
+  {x:1680, y:972, r:26, v:0, grate:true},
+  // park trees
+  {x:930, y:760, r:32, v:0, park:true},
+  {x:1040, y:860, r:30, v:1, park:true},
+  {x:1180, y:760, r:34, v:2, park:true},
+  {x:1230, y:880, r:31, v:0, park:true},
+  {x:930, y:880, r:29, v:1, park:true}
+];
+
+/* road utilities */
+const manholes = [
+  {x:360, y:545}, {x:1140, y:545}, {x:865, y:360}, {x:865, y:860}, {x:540, y:1030}, {x:1350, y:1030}
+];
+const drainGrates = [
+  {x:480, y:470}, {x:1220, y:470}, {x:730, y:620}, {x:1340, y:620}, {x:480, y:1000}, {x:1220, y:1000}
+];
+
+/* glowing vending machines & sidewalk signs */
+const vendingMachines = [
+  {x:465, y:412, w:26, h:40, c:'#00d2ff', sign:'COLD DRINKS'},
+  {x:1545, y:412, w:26, h:40, c:'#ff3366', sign:'SNACKS'}
+];
+const sidewalkSigns = [
+  {x:210, y:446, title:'GOOD FOOD', sub:'BETTER PEOPLE'}
+];
+
+/* street furniture — upgraded with rich types */
 const props = [
-  {t:'dumpster', x:1206, y:392}, {t:'dumpster', x:512, y:452},
-  {t:'dumpster', x:1150, y:1050}, {t:'dumpster', x:1720, y:430},
+  {t:'dumpster', x:1206, y:392, c:'#234433'}, {t:'dumpster', x:512, y:452, c:'#1c384d'},
+  {t:'dumpster', x:1150, y:1050, c:'#2e3247'}, {t:'dumpster', x:1720, y:430, c:'#284033'},
   {t:'bench', x:960, y:760}, {t:'bench', x:1120, y:760}, {t:'bench', x:1040, y:920},
   {t:'bench', x:640, y:470}, {t:'bench', x:1660, y:470},
   {t:'hydrant', x:470, y:472}, {t:'hydrant', x:1340, y:472}, {t:'hydrant', x:760, y:1002},
@@ -52,18 +104,18 @@ const markerDefs = {
   end:    {x:1080, y:830}
 };
 
-/* props */
+/* parked cars with specific models and detailed styling */
 const parkedCars = [
-  {x:1540,y:690,w:46,h:78,c:'#3c4568'},
-  {x:1620,y:690,w:46,h:78,c:'#6a3b52', stolen:true},
-  {x:1700,y:690,w:46,h:78,c:'#39506b'},
-  {x:1540,y:820,w:46,h:78,c:'#4a4560'},
-  {x:1700,y:820,w:46,h:78,c:'#43405c'},
-  {x:250,y:500,w:46,h:78,c:'#3a4260'},
-  {x:1060,y:500,w:46,h:78,c:'#4c3f55'},
-  {x:600,y:600,w:46,h:78,c:'#39455e'},
-  {x:1400,y:600,w:46,h:78,c:'#46405e'},
-  {x:980,y:1030,w:46,h:78,c:'#3d4360'}
+  {x:1540,y:690,w:48,h:80,c:'#2e3650',type:'sedan'},
+  {x:1620,y:690,w:46,h:82,c:'#842c58',type:'sports',stolen:true},
+  {x:1700,y:690,w:50,h:84,c:'#2a4860',type:'suv'},
+  {x:1540,y:820,w:48,h:80,c:'#423b55',type:'sedan'},
+  {x:1700,y:820,w:48,h:80,c:'#3b3650',type:'sedan'},
+  {x:250,y:500,w:52,h:86,c:'#343e5a',type:'van'},
+  {x:1060,y:500,w:48,h:80,c:'#49354e',type:'sedan'},
+  {x:600,y:600,w:48,h:80,c:'#2d3d54',type:'sedan'},
+  {x:1400,y:600,w:50,h:84,c:'#3e3854',type:'suv'},
+  {x:980,y:1030,w:48,h:80,c:'#333b54',type:'sedan'}
 ];
 let policeCars = [];
 
@@ -75,8 +127,11 @@ const NPC = {
   fighter:person(1235, 300, '#c9d2ff', 'Deniz'),
   carOwn: person(1660, 800, '#ffb9d3', 'Sam'),
   kid:    person(330, 1000,'#b7ffd9', 'Ana'),
-  cop:    person(1520, 1060,'#9fd0ff', 'Officer')
+  cop:    person(1520, 1060,'#9fd0ff', 'Officer'),
+  witness:person(1290, 480, '#e8a0bf', 'Elena')
 };
+NPC.witness.hidden = true;
+const skidMarks = [];
 const crowd = [];
 /* Pedestrians walk fixed loops. Deterministic routes keep the demo repeatable —
    no random wandering that can strand an NPC inside a wall mid-pitch. */

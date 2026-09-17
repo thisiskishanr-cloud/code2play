@@ -113,11 +113,140 @@
   .btn:hover{background:var(--money)}
   .btn:focus-visible{outline:3px solid var(--sodium);outline-offset:3px}
 
-  /* flashback */
+  /* flashback & CCTV surveillance */
   #flash{background:#000}
   #flash .frame{font-family:var(--display);font-size:72px;line-height:.95}
   #flash .money{color:var(--money);font-size:96px}
   #flash .name{font-family:var(--body);font-size:22px;color:#fff;margin-top:14px;font-style:italic}
+
+  /* ---------- CCTV SURVEILLANCE OVERLAY ---------- */
+  #cctvOverlay{
+    background:rgba(0,0,0,0.15);
+    z-index:7;
+    pointer-events:none;
+    display:none;
+    flex-direction:column;
+    justify-content:space-between;
+    padding:22px 28px;
+    box-shadow:inset 0 0 100px rgba(0,0,0,.9);
+    transition:background-color .3s;
+  }
+  #cctvOverlay.on{display:flex}
+  #cctvOverlay.cam-store{background:rgba(10,35,20,.18)}
+  #cctvOverlay.cam-fight{background:rgba(15,20,45,.22)}
+  #cctvOverlay.cam-car{background:rgba(40,25,10,.2)}
+
+  .cctv-scanlines{
+    position:absolute;inset:0;pointer-events:none;z-index:2;
+    background:linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,.4) 50%),
+               linear-gradient(90deg, rgba(255,0,0,.03), rgba(0,255,0,.02), rgba(0,0,255,.03));
+    background-size:100% 3px, 4px 100%;
+    opacity:.75;
+  }
+  .cctv-vignette{
+    position:absolute;inset:0;pointer-events:none;z-index:2;
+    background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,.75) 100%);
+  }
+  .cctv-glitch-layer{
+    position:absolute;inset:0;pointer-events:none;z-index:4;opacity:0;
+    background:rgba(255,255,255,.1);
+  }
+  .cctv-glitch-layer.active{
+    opacity:1;
+    animation:cctvGlitchNoise .2s steps(2) infinite;
+  }
+  @keyframes cctvGlitchNoise{
+    0%{clip-path:inset(10% 0 70% 0);background:rgba(255,46,136,.25);transform:translateX(-8px)}
+    30%{clip-path:inset(60% 0 15% 0);background:rgba(61,255,139,.2);transform:translateX(6px)}
+    70%{clip-path:inset(35% 0 45% 0);background:rgba(94,169,255,.3);transform:translateX(-4px)}
+    100%{clip-path:inset(0 0 0 0);background:rgba(255,255,255,.15);transform:translateX(0)}
+  }
+
+  .cctv-hud{position:absolute;inset:20px 24px;pointer-events:none;z-index:3;display:flex;flex-direction:column;justify-content:space-between}
+  .cctv-top{display:flex;align-items:center;justify-content:space-between;font-family:var(--body);font-size:13px;letter-spacing:.2em;color:#e8e9f3;text-shadow:0 0 8px rgba(0,0,0,.9)}
+  .cctv-rec{display:flex;align-items:center;gap:7px;font-weight:600;color:#ff3b5c}
+  .cctv-dot{width:10px;height:10px;border-radius:50%;background:#ff2e4d;box-shadow:0 0 10px #ff2e4d;animation:cctvBlink 1s step-start infinite}
+  @keyframes cctvBlink{50%{opacity:0}}
+  .cctv-cam{font-family:var(--display);font-size:17px;letter-spacing:.15em;color:#ffd9a0;text-shadow:0 0 12px rgba(255,217,160,.4)}
+  .cctv-time{font-family:var(--body);font-variant-numeric:tabular-nums;color:#b9c0dd}
+
+  .cctv-reticles{position:absolute;inset:0;pointer-events:none}
+  .cctv-corner{position:absolute;width:24px;height:24px;border:2px solid rgba(255,255,255,.3)}
+  .cctv-corner.top-left{top:0;left:0;border-right:0;border-bottom:0}
+  .cctv-corner.top-right{top:0;right:0;border-left:0;border-bottom:0}
+  .cctv-corner.bottom-left{bottom:0;left:0;border-right:0;border-top:0}
+  .cctv-corner.bottom-right{bottom:0;right:0;border-left:0;border-top:0}
+  .cctv-crosshair{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:20px;height:20px}
+  .cctv-crosshair::before,.cctv-crosshair::after{content:'';position:absolute;background:rgba(255,255,255,.25)}
+  .cctv-crosshair::before{top:9px;left:0;width:20px;height:2px}
+  .cctv-crosshair::after{top:0;left:9px;width:2px;height:20px}
+
+  .cctv-trackbox{
+    position:absolute;top:42%;left:48%;transform:translate(-50%,-50%);
+    width:160px;height:160px;border:1px dashed rgba(61,255,139,.7);
+    box-shadow:0 0 20px rgba(61,255,139,.15);
+    transition:all .4s ease-out;
+  }
+  .cctv-trackbox.alert{border-color:rgba(255,46,136,.85);box-shadow:0 0 24px rgba(255,46,136,.3)}
+  .cctv-tag{
+    position:absolute;top:-18px;left:0;font-size:10px;letter-spacing:.18em;
+    background:rgba(10,11,20,.85);color:#3dff8b;padding:2px 6px;border:1px solid rgba(61,255,139,.5);
+  }
+  .cctv-trackbox.alert .cctv-tag{color:#ff2e88;border-color:rgba(255,46,136,.7)}
+
+  .cctv-bottom{display:flex;align-items:flex-end;justify-content:space-between;font-size:11px;letter-spacing:.22em;color:#7a81a8}
+  .cctv-stamp{
+    font-family:var(--display);font-size:42px;letter-spacing:.15em;line-height:1;
+    color:#ff2e88;border:3px solid #ff2e88;padding:4px 16px;
+    transform:rotate(-6deg) scale(1.4);opacity:0;pointer-events:none;
+    text-shadow:0 0 20px rgba(255,46,136,.6);box-shadow:0 0 30px rgba(255,46,136,.3);
+  }
+  .cctv-stamp.show{
+    animation:stampSlam .28s cubic-bezier(.1,.9,.2,1) forwards;
+  }
+  @keyframes stampSlam{
+    0%{opacity:0;transform:rotate(-15deg) scale(2.4)}
+    60%{opacity:1;transform:rotate(-5deg) scale(.92)}
+    100%{opacity:1;transform:rotate(-6deg) scale(1)}
+  }
+
+  /* cinematic card inside CCTV overlay */
+  .cctv-card{
+    position:absolute;bottom:42px;left:50%;transform:translateX(-50%);
+    width:700px;z-index:5;text-align:center;pointer-events:none;
+  }
+  .cctv-reward{
+    font-family:var(--display);font-size:76px;line-height:1;color:var(--money);
+    text-shadow:0 0 35px rgba(61,255,139,.7);margin-bottom:8px;
+    transition:transform .3s, opacity .3s;
+  }
+  .cctv-reward.glitch-out{
+    animation:cctvRewardGlitch .4s steps(3) forwards;
+  }
+  @keyframes cctvRewardGlitch{
+    0%{transform:scale(1) skewX(0deg);filter:none}
+    30%{transform:scale(1.1) skewX(-14deg);color:#ff2e88;filter:hue-rotate(180deg)}
+    60%{transform:scale(.95) skewX(10deg);opacity:.8}
+    100%{transform:scale(.8);opacity:0;display:none}
+  }
+
+  .cctv-victim{
+    background:rgba(8,9,18,.92);border-left:4px solid var(--neon);
+    padding:14px 22px;box-shadow:0 12px 40px rgba(0,0,0,.85);
+    opacity:0;transform:translateY(16px);
+    transition:opacity .35s ease-out, transform .35s ease-out;
+  }
+  .cctv-victim.show{
+    opacity:1;transform:translateY(0);
+  }
+  .cctv-victim-name{
+    font-family:var(--display);font-size:28px;letter-spacing:.08em;color:#fff;
+    text-align:left;display:flex;align-items:center;justify-content:space-between;
+  }
+  .cctv-victim-desc{
+    font-family:var(--body);font-size:16px;color:#c9d0ee;margin-top:4px;
+    text-align:left;line-height:1.4;font-style:italic;
+  }
 
   /* consequence ledger */
   #ledger{background:rgba(4,4,9,.97);justify-content:center}

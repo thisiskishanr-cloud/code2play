@@ -208,34 +208,118 @@ async function revealSequence(){
   await say("Wait — you're the one who did Maria's shop.", {who:'CONTACT'});
   hideSay();
 
-  // freeze + glitch
+  // freeze + heavy glitch
   stopDrone();
-  sfxGlitch();
+  sfxGlitchHeavy();
   $('hud').classList.add('glitch');
-  S.shake = 20;
-  await wait(600);
+  S.shake = 22;
+  await wait(550);
   $('hud').classList.remove('glitch');
   setHUD(false);
+  S.phase = 'cine';
 
-  // flashback montage
-  const frames = [
-    {a:'STORE', m:'+$500',   n:'Maria, 54. Ran it alone for nine years.'},
-    {a:'FIGHT', m:'+300 XP', n:'Deniz, 31. Two fractures. Out of work.'},
-    {a:'CAR',   m:'+$1,000', n:'Sam, 26. Night shift, forty minutes away.'}
-  ];
-  showOverlay('flash', true);
-  for(const f of frames){
-    $('flashframe').innerHTML = f.a;
-    $('flashname').textContent = '';
-    sfxHit(); await wait(280);
-    $('flashframe').innerHTML = '<span class="money">' + f.m + '</span>';
-    sfxReward(); await wait(360);
-    $('flashname').textContent = f.n;
-    sfxHeart(); await wait(1150);
-    $('flashframe').innerHTML = ''; $('flashname').textContent = '';
-    await wait(140);
-  }
-  showOverlay('flash', false);
+  // ===== CINEMATIC CCTV FLASHBACK 1: MARIA'S STORE =====
+  sfxCctvSwitch();
+  cam.x = 300; cam.y = 470; cam.z = 1.9; cam.zTarget = 2.4;
+  P.hidden = false; P.x = 280; P.y = 470; P.face = 1; P.vx = 0; P.vy = 0;
+  NPC.owner.hidden = false; NPC.owner.x = 320; NPC.owner.y = 470; NPC.owner.state = 'surrender';
+  setCctvCam('CAM 01 // STORE REGISTER', '14:22:05:18', 'cam-store', 'TRACKING: SUSPECT', {top:'48%', left:'45%', width:'130px', height:'130px'});
+  showCctvGlitch(200);
+
+  // the grab
+  sfxHit(); S.shake = 12;
+  burst(NPC.owner.x, NPC.owner.y - 14, '#ffb347', 16, 0.8);
+  $('cctvReward').textContent = '+$500';
+  $('cctvReward').className = 'cctv-reward';
+  $('cctvReward').style.display = 'block';
+  sfxReward();
+  await wait(950);
+
+  // the cost
+  sfxSubBassDrop(); sfxGlitch();
+  $('cctvReward').classList.add('glitch-out');
+  $('cctvTrackbox').classList.add('alert');
+  $('cctvTrackTag').textContent = 'VICTIM: MARIA';
+  $('cctvVictimName').innerHTML = 'MARIA, 54 <span style="font-size:14px;color:#ff2e88;letter-spacing:.2em">OWNER</span>';
+  $('cctvVictimDesc').textContent = 'Ran the corner shop alone for nine years. Business closed. Her income stopped.';
+  $('cctvVictim').classList.add('show');
+  NPC.owner.state = 'crying';
+  P.x = 240;
+  showCctvStamp('BUSINESS CLOSED');
+  sfxHeart();
+  await wait(2500);
+
+  // ===== CINEMATIC CCTV FLASHBACK 2: ALLEYWAY ASSAULT =====
+  sfxCctvSwitch(); showCctvGlitch(200);
+  cam.x = 1235; cam.y = 310; cam.z = 2.0; cam.zTarget = 2.5;
+  P.hidden = false; P.x = 1210; P.y = 300; P.face = 1;
+  NPC.fighter.hidden = false; NPC.fighter.x = 1245; NPC.fighter.y = 300; NPC.fighter.state = 'idle';
+  NPC.witness.hidden = false; NPC.witness.x = 1285; NPC.witness.y = 390; NPC.witness.state = 'idle';
+  setCctvCam('CAM 04 // ALLEYWAY REAR', '16:48:12:04', 'cam-fight', 'TRACKING: TARGET', {top:'48%', left:'52%', width:'140px', height:'140px'});
+
+  // the hit
+  sfxHit(); S.shake = 16;
+  burst(NPC.fighter.x, NPC.fighter.y - 12, '#ff2e88', 22, 1.2);
+  $('cctvReward').textContent = '+300 XP';
+  $('cctvReward').className = 'cctv-reward';
+  $('cctvReward').style.color = 'var(--sodium)';
+  $('cctvReward').style.display = 'block';
+  await wait(850);
+
+  // the cost
+  sfxThud(); sfxSubBassDrop(); sfxGlitch();
+  NPC.fighter.state = 'down';
+  NPC.witness.x = 1260; NPC.witness.y = 315; NPC.witness.state = 'kneel';
+  $('cctvReward').classList.add('glitch-out');
+  $('cctvTrackbox').classList.add('alert');
+  $('cctvTrackTag').textContent = 'CASUALTY: DENIZ';
+  $('cctvVictimName').innerHTML = 'DENIZ, 31 <span style="font-size:14px;color:#ff2e88;letter-spacing:.2em">HOSPITALISED</span>';
+  $('cctvVictimDesc').textContent = 'Two fractures. Out of work for six months. His family covering his medical costs.';
+  $('cctvVictim').classList.add('show');
+  showCctvStamp('HOSPITALISED');
+  sfxHeart();
+  await wait(2500);
+  NPC.witness.hidden = true;
+
+  // ===== CINEMATIC CCTV FLASHBACK 3: EAST LOT GRAND THEFT =====
+  sfxCctvSwitch(); showCctvGlitch(200);
+  cam.x = 1620; cam.y = 730; cam.z = 1.8; cam.zTarget = 2.2;
+  P.hidden = true;
+  setCctvCam('CAM 09 // EAST LOT B', '17:35:40:29', 'cam-car', 'TRACKING: VEHICLE', {top:'48%', left:'49%', width:'160px', height:'160px'});
+
+  // hotwire & tire peel
+  sfxHit(); burst(1620, 690, '#ffe066', 18, 1);
+  skidMarks.push({x1:1620, y1:690, x2:1620, y2:820});
+  skidMarks.push({x1:1620, y1:820, x2:1500, y2:840});
+  $('cctvReward').textContent = '+$1,000';
+  $('cctvReward').className = 'cctv-reward';
+  $('cctvReward').style.color = 'var(--money)';
+  $('cctvReward').style.display = 'block';
+  sfxReward();
+  await wait(950);
+
+  // the cost - time skip & owner discovery
+  sfxRewind(); showCctvGlitch(260);
+  NPC.carOwn.hidden = false; NPC.carOwn.x = 1620; NPC.carOwn.y = 710; NPC.carOwn.state = 'searching_shock';
+  sfxSubBassDrop(); sfxGlitch();
+  $('cctvReward').classList.add('glitch-out');
+  $('cctvTrackbox').classList.add('alert');
+  $('cctvTrackTag').textContent = 'VICTIM: SAM';
+  $('cctvVictimName').innerHTML = 'SAM, 26 <span style="font-size:14px;color:#ff2e88;letter-spacing:.2em">NIGHT SHIFT</span>';
+  $('cctvVictimDesc').textContent = 'Night shift forty minutes away. Late every night now. Lost her job the next week.';
+  $('cctvVictim').classList.add('show');
+  showCctvStamp('REPORTED STOLEN');
+  sfxHeart();
+  await wait(2700);
+
+  // ===== TRANSITION TO CONSEQUENCE LEDGER =====
+  hideCctvOverlay();
+  P.hidden = false; P.x = 700; P.y = 545;
+  NPC.owner.x = 250; NPC.owner.y = 470; NPC.owner.state = 'sit';
+  NPC.fighter.x = 1235; NPC.fighter.y = 300; NPC.fighter.state = 'down';
+  NPC.carOwn.x = 1600; NPC.carOwn.y = 760; NPC.carOwn.state = 'search';
+  NPC.witness.hidden = true;
+  cam.zTarget = 1; cam.x = 960; cam.y = 650;
 
   // ledger
   const rows = [
@@ -262,6 +346,7 @@ async function revealSequence(){
   showOverlay('ledger', false);
   await act3Intro();
 }
+
 
 /* ---------- ACT III ---------- */
 async function act3Intro(){
@@ -364,7 +449,9 @@ async function jumpToAct(n){
   if(S.busy) return;
   S.busy = true;
   hideSay(); $('choices').classList.remove('on'); pressResolve = null;
+  hideCctvOverlay();
   showOverlay('flash', false); showOverlay('ledger', false); showOverlay('endcard', false);
+  P.hidden = false; NPC.witness.hidden = true; releaseCam();
   S.driving = false; S.chase = false; policeCars = [];
   if(n === 1){
     S.act = 1; S.mission = 1; S.money = 0; S.xp = 0; S.rep = 0;

@@ -50,3 +50,49 @@ function startDrone(){
 }
 function stopDrone(){ if(droneNode){ try{droneNode.o.stop();}catch(e){} droneNode = null; } }
 function sfxHeart(){ tone(58,0.16,'sine',0.22); setTimeout(()=>tone(52,0.2,'sine',0.18), 220); }
+function sfxCctvSwitch(){
+  const ac = audio(); if(!ac) return;
+  const t = ac.currentTime;
+  tone(1800, 0.04, 'square', 0.06, t);
+  tone(90, 0.06, 'sawtooth', 0.12, t + 0.02);
+  for(let i=0;i<4;i++) tone(200 + Math.random()*2400, 0.03, 'square', 0.04, t + 0.02 + i*0.015);
+}
+function sfxRewind(){
+  const ac = audio(); if(!ac) return;
+  const t = ac.currentTime;
+  const o = ac.createOscillator(), g = ac.createGain();
+  o.type = 'sawtooth';
+  o.frequency.setValueAtTime(300, t);
+  o.frequency.exponentialRampToValueAtTime(2400, t + 0.28);
+  g.gain.setValueAtTime(0.001, t);
+  g.gain.linearRampToValueAtTime(0.08, t + 0.05);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+  o.connect(g); g.connect(ac.destination);
+  o.start(t); o.stop(t + 0.3);
+}
+function sfxSubBassDrop(){
+  const ac = audio(); if(!ac) return;
+  const t = ac.currentTime;
+  const o = ac.createOscillator(), g = ac.createGain();
+  o.type = 'sine';
+  o.frequency.setValueAtTime(95, t);
+  o.frequency.exponentialRampToValueAtTime(28, t + 0.9);
+  g.gain.setValueAtTime(0.001, t);
+  g.gain.linearRampToValueAtTime(0.24, t + 0.03);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.9);
+  o.connect(g); g.connect(ac.destination);
+  o.start(t); o.stop(t + 0.95);
+}
+function sfxGlitchHeavy(){
+  const ac = audio(); if(!ac) return;
+  const t = ac.currentTime;
+  for(let i=0;i<14;i++){
+    tone(80 + Math.random()*2200, 0.04 + Math.random()*0.03, i%2===0?'sawtooth':'square', 0.08, t + i*0.03);
+  }
+  tone(50, 0.4, 'sine', 0.18, t);
+}
+function sfxStamp(){
+  tone(65, 0.35, 'sawtooth', 0.25);
+  tone(120, 0.12, 'square', 0.15);
+}
+

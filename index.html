@@ -51,6 +51,42 @@
     </div>
 
     <div class="overlay" id="act"><div class="num" id="actnum"></div><div class="nm" id="actname"></div></div>
+    
+    <!-- CCTV / Cinematic Consequence Reveal Overlay -->
+    <div class="overlay" id="cctvOverlay">
+      <div class="cctv-scanlines"></div>
+      <div class="cctv-vignette"></div>
+      <div class="cctv-glitch-layer" id="cctvGlitch"></div>
+      <div class="cctv-hud">
+        <div class="cctv-top">
+          <div class="cctv-rec"><span class="cctv-dot"></span>REC</div>
+          <div class="cctv-cam" id="cctvCam">CAM 01 // WEST REGISTER</div>
+          <div class="cctv-time" id="cctvTime">14:22:05:18</div>
+        </div>
+        <div class="cctv-reticles">
+          <div class="cctv-corner top-left"></div>
+          <div class="cctv-corner top-right"></div>
+          <div class="cctv-corner bottom-left"></div>
+          <div class="cctv-corner bottom-right"></div>
+          <div class="cctv-crosshair"></div>
+          <div class="cctv-trackbox" id="cctvTrackbox">
+            <span class="cctv-tag" id="cctvTrackTag">TARGET: SUSPECT</span>
+          </div>
+        </div>
+        <div class="cctv-bottom">
+          <div class="cctv-sys" id="cctvSys">FEED // SECURITY ARCHIVE · PLAYBACK 1.0x</div>
+          <div class="cctv-stamp" id="cctvStamp"></div>
+        </div>
+      </div>
+      <div class="cctv-card" id="cctvCard">
+        <div class="cctv-reward" id="cctvReward">+$500</div>
+        <div class="cctv-victim" id="cctvVictim">
+          <div class="cctv-victim-name" id="cctvVictimName">MARIA, 54</div>
+          <div class="cctv-victim-desc" id="cctvVictimDesc">Ran it alone for nine years. Business closed.</div>
+        </div>
+      </div>
+    </div>
+
     <div class="overlay" id="flash"><div class="frame" id="flashframe"></div><div class="name" id="flashname"></div></div>
     <div class="overlay" id="ledger">
       <div class="head">WHAT THE NUMBERS WERE COUNTING</div>
