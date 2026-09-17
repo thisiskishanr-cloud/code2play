@@ -1,0 +1,13 @@
+{
+  "name": "plus500",
+  "version": "0.2.0",
+  "description": "+500 — a short narrative crime game about unexpected consequences. Vanilla HTML/CSS/JS, Canvas 2D, no build step.",
+  "private": true,
+  "scripts": {
+    "start": "npx --yes serve .",
+    "start:python": "python3 -m http.server 8000"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "license": "UNLICENSED"
+}

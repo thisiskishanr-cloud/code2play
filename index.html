@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>+500</title>
+
+<!-- Typefaces: Anton (HUD / display) + IBM Plex Sans (body).
+     Loaded from Google Fonts when online. Offline, the fallback stacks in
+     style.css take over and the game still runs. To vendor them locally,
+     see assets/fonts/README.txt. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="fit">
+  <div id="stage">
+    <canvas id="c" width="960" height="600"></canvas>
+    <div id="vig"></div>
+
+    <div id="hud">
+      <div class="stats">
+        <div class="cash" id="cash">$0</div>
+        <div class="sub">XP<b id="xp">0</b></div>
+        <div class="sub">REP<b id="repn">0</b></div>
+        <div class="repbar"><i id="repbar"></i></div>
+      </div>
+      <div id="objective"><div class="tag" id="objtag">OBJECTIVE</div><div class="txt" id="objtxt"></div></div>
+      <div id="pops"></div>
+    </div>
+
+    <div id="banner"><div class="k" id="bk"></div><div class="v" id="bv"></div></div>
+    <div id="prompt"><kbd>E</kbd><span id="promptText"></span></div>
+
+    <div id="dialogue"><div class="who" id="dwho"></div><div class="line" id="dline"></div><div class="cont">E</div></div>
+
+    <div id="choices"></div>
+
+    <div class="overlay on" id="title">
+      <h1>+500</h1>
+      <div class="tagline">Make money. Build reputation. Do whatever it takes.</div>
+      <button class="btn" id="startBtn">Start the job</button>
+      <div class="keys">
+        <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> move &nbsp;·&nbsp; <kbd>Shift</kbd> sprint &nbsp;·&nbsp; <kbd>E</kbd> interact / continue<br>
+        Presenter keys: <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> jump to act &nbsp;·&nbsp; <kbd>R</kbd> restart
+      </div>
+    </div>
+
+    <div class="overlay" id="act"><div class="num" id="actnum"></div><div class="nm" id="actname"></div></div>
+    <div class="overlay" id="flash"><div class="frame" id="flashframe"></div><div class="name" id="flashname"></div></div>
+    <div class="overlay" id="ledger">
+      <div class="head">WHAT THE NUMBERS WERE COUNTING</div>
+      <table id="ledgerTable"></table>
+      <div class="line" id="ledgerLine"></div>
+    </div>
+    <div class="overlay" id="endcard">
+      <h2 id="endTitle"></h2>
+      <p id="endText"></p>
+      <button class="btn" id="againBtn">Play again</button>
+    </div>
+
+    <div id="fade"></div>
+  </div>
+</div>
+<div id="hint">+500 — hackathon prototype</div>
+
+<!-- Plain scripts, loaded in dependency order. Deliberately NOT ES modules,
+     so the game also runs by double-clicking index.html (file://). -->
+<script src="js/core.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/world.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/missions.js"></script>
+<script src="js/render.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
