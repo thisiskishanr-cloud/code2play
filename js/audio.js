@@ -28,17 +28,27 @@ function sfxGlitch(){
 function startMusic(){
   stopMusic();
   if (!bgAudio) {
-    bgAudio = new Audio('assets/videoplayback.m4a');
+    bgAudio = new Audio();
     bgAudio.loop = true;
     bgAudio.volume = 0.5;
   }
+  bgAudio.src = 'assets/videoplayback.m4a';
+  bgAudio.play().catch(e => console.log("Audio play failed:", e));
+}
+function startAct2Music(){
+  stopMusic();
+  if (!bgAudio) {
+    bgAudio = new Audio();
+    bgAudio.loop = true;
+    bgAudio.volume = 0.5;
+  }
+  bgAudio.src = 'assets/suspense_soundridemusic.mp3';
   bgAudio.play().catch(e => console.log("Audio play failed:", e));
 }
 function stopMusic(){ 
   if(musicTimer){ clearInterval(musicTimer); musicTimer = null; } 
   if (bgAudio) {
     bgAudio.pause();
-    bgAudio.currentTime = 0;
   }
 }
 function startDrone(){

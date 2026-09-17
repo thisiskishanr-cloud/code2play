@@ -169,6 +169,7 @@ async function act2Intro(){
   await actCard('ACT II', 'THE SAME STREETS', 1700);
   await fadeIn(700);
   startDrone();
+  startAct2Music();
   await say('Same city. Nobody put a marker on anything.', {quiet:true});
   hideSay();
 }
@@ -351,6 +352,7 @@ async function revealSequence(){
 /* ---------- ACT III ---------- */
 async function act3Intro(){
   await fadeOut(600);
+  stopMusic();
   S.act = 3;
   S.mission = 10;
   S.rain = 1; S.dark = 0.68;
